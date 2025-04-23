@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- automation_v1alpha1_faasdeployment.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

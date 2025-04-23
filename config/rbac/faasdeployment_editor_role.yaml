@@ -1,0 +1,27 @@
+# permissions for end users to edit faasdeployments.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: faasplatform
+    app.kubernetes.io/managed-by: kustomize
+  name: faasdeployment-editor-role
+rules:
+- apiGroups:
+  - automation.faasplatform
+  resources:
+  - faasdeployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - automation.faasplatform
+  resources:
+  - faasdeployments/status
+  verbs:
+  - get

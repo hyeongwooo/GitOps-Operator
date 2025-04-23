@@ -1,0 +1,27 @@
+apiVersion: automation.faasplatform/v1alpha1
+kind: FaaSDeployment
+metadata:
+  labels:
+    app.kubernetes.io/name: faasplatform
+    app.kubernetes.io/managed-by: kustomize
+  name: faasdeployment-sample
+spec:
+  user: user1
+  template: video-upload-processing
+  event: 
+  - type: webhook
+    name: upload
+  - type: webhook
+    name: A
+  - type: webhook
+    name: entered
+  service:
+  - name: thumbnail
+    image: myrepo/my-image:latest
+  - name: display
+    image: myrepo/display-image:v2
+  eventLogic:
+    - condition: upload
+      service: thumbnail
+    - condition: entered
+      service: display
