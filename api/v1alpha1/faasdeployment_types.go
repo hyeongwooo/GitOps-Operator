@@ -25,11 +25,11 @@ import (
 
 // FaaSDeploymentSpec defines the desired state of FaaSDeployment
 type FaaSDeploymentSpec struct {
-	User       string        `json:"user"`
-	Template   string        `json:"template"`
-	Event      []EventSpec   `json:"event"`
-	Service    []ServiceSpec `json:"service"`
-	EventLogic []LogicSpec   `json:"eventLogic"`
+	User       string                 `json:"user"`
+	Template   string                 `json:"template"`
+	Event      []EventSpec            `json:"event"`
+	Service    []ServiceSpec          `json:"service"`
+	EventLogic []ConditionServiceSpec `json:"eventLogic"`
 }
 
 type EventSpec struct {
@@ -42,7 +42,7 @@ type ServiceSpec struct {
 	Image string `json:"image"`
 }
 
-type LogicSpec struct {
+type ConditionServiceSpec struct {
 	Condition string `json:"condition"`
 	Service   string `json:"service"`
 }

@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -76,15 +77,19 @@ func (r *FaaSDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		return ctrl.Result{}, err
 	}
 
+	rand.Seed(time.Now().UnixNano())
+	randomPort := 10000 + rand.Intn(10000)
+
 	values := map[string]interface{}{
 		"User":       cr.Spec.User,
 		"Event":      cr.Spec.Event,
 		"Service":    cr.Spec.Service,
 		"EventLogic": cr.Spec.EventLogic,
 		"Template":   cr.Spec.Template,
+		"Port":       randomPort,
 	}
 
-	files := []string{"sensor.yaml", "eventsource.yaml", "workflow.yaml", "knative.yaml"}
+	files := []string{"sensor.yaml", "eventsource.yaml", "workflow.yaml", "knative.yaml", "eventbus.yaml"}
 	if err := renderTemplates(templatePath, renderedPath, files, values); err != nil {
 		logger.Error(err, "❌ Failed to render templates")
 		return ctrl.Result{}, err
@@ -152,11 +157,12 @@ func commitToGitRepo(repoURL, filesPath, commitMsg string) error {
 		URL:      repoURL,
 		Progress: os.Stdout,
 		Auth: &githttp.BasicAuth{
-			Username: "git", // or anything except empty string
+			Username: "hyeongwooo", // or anything except empty string
 			Password: os.Getenv("GIT_TOKEN"),
 		},
 	})
 	if err != nil {
+		fmt.Println("🔑 GIT_TOKEN:", os.Getenv("GIT_TOKEN"))
 		return err
 	}
 
@@ -184,11 +190,10 @@ func commitToGitRepo(repoURL, filesPath, commitMsg string) error {
 	if err != nil {
 		return err
 	}
-
 	return repo.Push(&git.PushOptions{
 		Progress: os.Stdout,
 		Auth: &githttp.BasicAuth{
-			Username: "git",
+			Username: "hyeongwooo",
 			Password: os.Getenv("GIT_TOKEN"),
 		},
 	})
